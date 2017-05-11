@@ -6,19 +6,19 @@
 package interfaz;
 
 import entity.Categoria;
-import entity.Factura;
-import entity.FacturaFormaPagoId;
 import entity.FacturaItems;
-import entity.FormaPago;
 import entity.ItemMenu;
+import entity.Pedido;
 import entity.PedidoItem;
 import entity.Personal;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import models.ModelMain;
+import org.hibernate.type.StandardBasicTypes;
 
 /**
  *
@@ -172,7 +173,7 @@ public class Gui extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
-        ComboCategoria = new javax.swing.JComboBox<String>();
+        ComboCategoria = new javax.swing.JComboBox<>();
         IdItemText = new javax.swing.JTextField();
         PrecioText = new javax.swing.JTextField();
         ImagenText = new javax.swing.JTextField();
@@ -201,31 +202,31 @@ public class Gui extends javax.swing.JFrame {
         tfPasswordCrearModUsuario = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        cbCargoCrearModUsuario = new javax.swing.JComboBox<String>();
-        cbHorarioCrearModUsuario = new javax.swing.JComboBox<String>();
+        cbCargoCrearModUsuario = new javax.swing.JComboBox<>();
+        cbHorarioCrearModUsuario = new javax.swing.JComboBox<>();
         bGuardarCrearModUsuario = new javax.swing.JButton();
         bCancelarCrearModUsuario = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
-        cbTipoId = new javax.swing.JComboBox<String>();
+        cbTipoId = new javax.swing.JComboBox<>();
         panelCRUDPedido = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
-        panelCRUDFactura = new javax.swing.JPanel();
-        CancelarGuardarFactura = new javax.swing.JButton();
-        GuardarFactura = new javax.swing.JButton();
-        Propina = new javax.swing.JComboBox<String>();
-        id_cliente = new javax.swing.JTextField();
-        descuento_factura = new javax.swing.JTextField();
-        id_factura = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
-        totalPago = new javax.swing.JTextField();
-        IdPersonalFactura = new javax.swing.JTextField();
-        Impuesto = new javax.swing.JTextField();
-        Impuestos = new javax.swing.JLabel();
+        idPedidoText = new javax.swing.JTextField();
+        idMesaText = new javax.swing.JTextField();
+        idMeseroText = new javax.swing.JTextField();
+        idTipoText = new javax.swing.JTextField();
+        horaInicioText = new javax.swing.JTextField();
+        horaEntregaText = new javax.swing.JTextField();
+        BotonGuardarPedido = new javax.swing.JButton();
+        BotonConsultaPedido = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        panelCRUDFactura = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -284,13 +285,13 @@ public class Gui extends javax.swing.JFrame {
         });
 
         btCrearFactura.setText("Factura");
-        btCrearFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btCrearFacturaActionPerformed(evt);
-            }
-        });
 
         btCrearPedido.setText("Pedido");
+        btCrearPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCrearPedidoActionPerformed(evt);
+            }
+        });
 
         btCrearItem.setText("Item");
         btCrearItem.addActionListener(new java.awt.event.ActionListener() {
@@ -373,7 +374,7 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel21.setText("Cantidad :");
 
-        ComboCategoria.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1" }));
+        ComboCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1" }));
         ComboCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboCategoriaActionPerformed(evt);
@@ -511,9 +512,9 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel13.setText("Horario: ");
 
-        cbCargoCrearModUsuario.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "Gerente", "Cajero", "Mesero" }));
+        cbCargoCrearModUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "Gerente", "Cajero", "Mesero" }));
 
-        cbHorarioCrearModUsuario.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "Mañana", "Tarde", "Noche" }));
+        cbHorarioCrearModUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "Mañana", "Tarde", "Noche" }));
 
         bGuardarCrearModUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/save.png"))); // NOI18N
         bGuardarCrearModUsuario.setText("Guardar");
@@ -533,7 +534,7 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel14.setText("TipoId:");
 
-        cbTipoId.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "Cedula Ciudadania", "Pasaporte", "Tarjeta Identidad" }));
+        cbTipoId.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "Cedula Ciudadania", "Pasaporte", "Tarjeta Identidad" }));
 
         javax.swing.GroupLayout panelCrearConsultarUsuarioLayout = new javax.swing.GroupLayout(panelCrearConsultarUsuario);
         panelCrearConsultarUsuario.setLayout(panelCrearConsultarUsuarioLayout);
@@ -641,7 +642,7 @@ public class Gui extends javax.swing.JFrame {
                             .addGroup(panelCrearConsultarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel12)
                                 .addComponent(cbCargoCrearModUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(panelCrearConsultarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bGuardarCrearModUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bCancelarCrearModUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -650,146 +651,150 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel16.setText("PANEL DE PEDIDO");
 
+        jLabel17.setText("Id Pedido");
+
+        jLabel22.setText("Id Mesa");
+
+        jLabel24.setText("Id Mesero");
+
+        jLabel25.setText("id Tipo");
+
+        jLabel26.setText("Hora Inicio");
+
+        jLabel27.setText("Hora Entrega");
+
+        BotonGuardarPedido.setText("Guardar");
+        BotonGuardarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonGuardarPedidoActionPerformed(evt);
+            }
+        });
+
+        BotonConsultaPedido.setText("Consultar");
+        BotonConsultaPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonConsultaPedidoActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Eliminar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelCRUDPedidoLayout = new javax.swing.GroupLayout(panelCRUDPedido);
         panelCRUDPedido.setLayout(panelCRUDPedidoLayout);
         panelCRUDPedidoLayout.setHorizontalGroup(
             panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCRUDPedidoLayout.createSequentialGroup()
-                .addGap(299, 299, 299)
-                .addComponent(jLabel16)
-                .addContainerGap(289, Short.MAX_VALUE))
+                .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelCRUDPedidoLayout.createSequentialGroup()
+                        .addGap(299, 299, 299)
+                        .addComponent(jLabel16))
+                    .addGroup(panelCRUDPedidoLayout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel22)
+                                .addComponent(jLabel24)
+                                .addComponent(jLabel26)
+                                .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelCRUDPedidoLayout.createSequentialGroup()
+                                .addComponent(jLabel27)
+                                .addGap(49, 49, 49)))
+                        .addGap(37, 37, 37)
+                        .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(idPedidoText)
+                            .addComponent(idMesaText)
+                            .addComponent(idMeseroText)
+                            .addComponent(idTipoText)
+                            .addComponent(horaInicioText, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                            .addComponent(horaEntregaText))
+                        .addGap(98, 98, 98)
+                        .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(BotonGuardarPedido)
+                            .addComponent(BotonConsultaPedido)
+                            .addComponent(jButton2))))
+                .addContainerGap(172, Short.MAX_VALUE))
         );
         panelCRUDPedidoLayout.setVerticalGroup(
             panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCRUDPedidoLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(jLabel16)
-                .addContainerGap(320, Short.MAX_VALUE))
+                .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelCRUDPedidoLayout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCRUDPedidoLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(idPedidoText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BotonGuardarPedido))))
+                .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelCRUDPedidoLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(idMesaText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel22))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel24)
+                            .addComponent(idMeseroText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelCRUDPedidoLayout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(BotonConsultaPedido)))
+                .addGap(18, 18, 18)
+                .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(idTipoText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(horaInicioText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26))
+                .addGap(23, 23, 23)
+                .addGroup(panelCRUDPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel27)
+                    .addComponent(horaEntregaText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
-        CancelarGuardarFactura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cancel.png"))); // NOI18N
-        CancelarGuardarFactura.setText("Cancelar");
-        CancelarGuardarFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CancelarGuardarFacturaActionPerformed(evt);
-            }
-        });
-
-        GuardarFactura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/save.png"))); // NOI18N
-        GuardarFactura.setText("Guardar");
-        GuardarFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GuardarFacturaActionPerformed(evt);
-            }
-        });
-
-        Propina.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SI", "NO" }));
-
-        descuento_factura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                descuento_facturaActionPerformed(evt);
-            }
-        });
-
-        jLabel17.setText("Id Factura");
-
-        jLabel22.setText("Propina");
-
-        jLabel24.setText("Id Personal");
-
-        jLabel25.setText("Descuento");
-
-        jLabel26.setText("Cedula Cliente");
-
-        jLabel27.setText("Total Pago:");
-
-        totalPago.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                totalPagoActionPerformed(evt);
-            }
-        });
-
-        Impuestos.setText("Impuesto");
+        jLabel15.setText("PANEL DE FACTURA");
 
         javax.swing.GroupLayout panelCRUDFacturaLayout = new javax.swing.GroupLayout(panelCRUDFactura);
         panelCRUDFactura.setLayout(panelCRUDFacturaLayout);
         panelCRUDFacturaLayout.setHorizontalGroup(
             panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCRUDFacturaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelCRUDFacturaLayout.createSequentialGroup()
-                        .addGap(165, 165, 165)
-                        .addComponent(GuardarFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CancelarGuardarFactura)
-                        .addGap(262, 262, 262))
-                    .addGroup(panelCRUDFacturaLayout.createSequentialGroup()
-                        .addComponent(Impuestos)
-                        .addGap(41, 41, 41)
-                        .addComponent(Impuesto)
-                        .addGap(440, 440, 440))
-                    .addGroup(panelCRUDFacturaLayout.createSequentialGroup()
-                        .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel27)
-                            .addComponent(jLabel17)
-                            .addComponent(jLabel22)
-                            .addComponent(jLabel24)
-                            .addComponent(jLabel25)
-                            .addComponent(jLabel26))
-                        .addGap(17, 17, 17)
-                        .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(id_cliente)
-                            .addComponent(descuento_factura, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(id_factura, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Propina, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(totalPago)
-                            .addComponent(IdPersonalFactura))
-                        .addGap(451, 451, 451))))
+                .addGap(301, 301, 301)
+                .addComponent(jLabel15)
+                .addContainerGap(278, Short.MAX_VALUE))
         );
         panelCRUDFacturaLayout.setVerticalGroup(
             panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCRUDFacturaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(id_factura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17))
-                .addGap(18, 18, 18)
-                .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel22)
-                    .addComponent(Propina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel24)
-                    .addComponent(IdPersonalFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(descuento_factura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel25))
-                .addGap(18, 18, 18)
-                .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel26)
-                    .addComponent(id_cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel27)
-                    .addComponent(totalPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Impuestos)
-                    .addComponent(Impuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                .addGroup(panelCRUDFacturaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(GuardarFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(CancelarGuardarFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21))
+                .addGap(20, 20, 20)
+                .addComponent(jLabel15)
+                .addContainerGap(313, Short.MAX_VALUE))
         );
+
+        jLayeredPane1.setLayer(panelCRUDItem, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(panelCrearConsultarUsuario, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(panelCRUDPedido, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(panelCRUDFactura, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelCrearConsultarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(panelCrearConsultarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(panelCRUDItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -799,7 +804,9 @@ public class Gui extends javax.swing.JFrame {
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelCrearConsultarUsuario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(panelCrearConsultarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 27, Short.MAX_VALUE))
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(panelCRUDItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -807,10 +814,6 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(panelCRUDFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jLayeredPane1.setLayer(panelCRUDItem, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(panelCrearConsultarUsuario, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(panelCRUDPedido, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(panelCRUDFactura, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
@@ -1017,7 +1020,6 @@ public class Gui extends javax.swing.JFrame {
     private void ComboCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboCategoriaActionPerformed
         
     }//GEN-LAST:event_ComboCategoriaActionPerformed
-    
     public void setCompPanelItem(){
             IdItemText.setText("");
             PrecioText.setText("");
@@ -1027,7 +1029,6 @@ public class Gui extends javax.swing.JFrame {
             ComboCategoria.setSelectedItem(" ");
 
     }
-    
     public void itemCrearModificar(int state){
         if(state == 0){
             Boton1.setIcon(new ImageIcon(getClass().getResource("save.png")));
@@ -1252,252 +1253,82 @@ public class Gui extends javax.swing.JFrame {
         
     }//GEN-LAST:event_Boton1ActionPerformed
 
-    private void btCrearFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCrearFacturaActionPerformed
+    private void btCrearPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCrearPedidoActionPerformed
         // TODO add your handling code here:
-        
-        if (rbCrear.isSelected()) {
-            setPanelesInvisible(3);
-            FacturaCrearModificar(0);//Para hacer el cambio en los botones
-            setCompPanelFactura();
-
-        }
-
-        if (rbConsultar.isSelected()) {
-            setPanelesInvisible(3);
-            FacturaCrearModificar(1);//Para hacer el cambio en los botones
-            setCompPanelFactura();
-        }
-
-        if (rbModificar.isSelected()) {
-            setPanelesInvisible(3);
-            FacturaCrearModificar(2);
-            setCompPanelFactura();
-        }
-
-        if (rbEliminar.isSelected()) {
-            setPanelesInvisible(3);
-            FacturaCrearModificar(3);
-            setCompPanelFactura();
-        }
-        
-    }//GEN-LAST:event_btCrearFacturaActionPerformed
-
-    
-    
-    public void setCompPanelFactura(){
-            id_factura.setText("");
-            Propina.setSelectedItem("NO");
-            IdPersonalFactura.setText("");
-            descuento_factura.setText("");
-            id_cliente.setText("");
-            totalPago.setText("");
-            Impuesto.setText("");
-    }
-    
-    public void FacturaCrearModificar(int state){
-        if(state == 0){
-            GuardarFactura.setIcon(new ImageIcon(getClass().getResource("save.png")));
-            GuardarFactura.setText("Guardar");
-            CancelarGuardarFactura.setIcon(new ImageIcon(getClass().getResource("cancel.png")));
-            CancelarGuardarFactura.setText("Cancelar");
-            Propina.setEditable(true);      
-            Impuesto.setEditable(true);      
-            IdPersonalFactura.setEditable(true);            
-            descuento_factura.setEditable(true);           
-            id_cliente.setEditable(true);            
-            totalPago.setEditable(true);     
-            GuardarFactura.setVisible(true);
-            GuardarFactura.setEnabled(true);
-            CancelarGuardarFactura.setVisible(true);
-            CancelarGuardarFactura.setEnabled(true);
+        if(rbCrear.isSelected()){
+            setPanelesInvisible(2);
             setCompPanelUsuario();
         }
-        if(state == 1){
-            GuardarFactura.setIcon(new ImageIcon(getClass().getResource("buscar.png")));
-            GuardarFactura.setText("Buscar");
-            CancelarGuardarFactura.setVisible(false);            
-            Propina.setEditable(false);      
-            Impuesto.setEditable(false);      
-            IdPersonalFactura.setEditable(false);            
-            descuento_factura.setEditable(false);           
-            id_cliente.setEditable(false);            
-            totalPago.setEditable(false);     
-            setCompPanelUsuario();
-        }
-        if(state == 2){
-            GuardarFactura.setText("Buscar");
-            CancelarGuardarFactura.setText("Actualizar");
-            CancelarGuardarFactura.setVisible(true);
-            CancelarGuardarFactura.setVisible(true);            
-            Propina.setEditable(true);            
-            IdPersonalFactura.setEditable(true);            
-            descuento_factura.setEditable(true);           
-            id_cliente.setEditable(true);  
-            Impuesto.setEditable(true);          
-            totalPago.setEditable(true);   
-            GuardarFactura.setIcon(new ImageIcon(getClass().getResource("buscar.png")));
-            CancelarGuardarFactura.setIcon(new ImageIcon(getClass().getResource("save.png")));
-            CancelarGuardarFactura.setEnabled(false);
-            setCompPanelUsuario();
-        }
-        if(state==3){
-            GuardarFactura.setText("Buscar");
-            CancelarGuardarFactura.setText("Eliminar");
-            CancelarGuardarFactura.setVisible(true);
-            tfNombreCrearModUsuario.setEditable(true);
-            Propina.setEditable(true);            
-            IdPersonalFactura.setEditable(true);            
-            descuento_factura.setEditable(true);  
-            Impuesto.setEditable(true);
-            id_cliente.setEditable(true);   
-            Impuesto.setEditable(true);          
-            totalPago.setEditable(true);
-            GuardarFactura.setIcon(new ImageIcon(getClass().getResource("buscar.png")));
-            CancelarGuardarFactura.setIcon(new ImageIcon(getClass().getResource("cancel.png")));
-            CancelarGuardarFactura.setEnabled(false);
-            setCompPanelUsuario();
-        }
-    }
-    
-    private void CancelarGuardarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarGuardarFacturaActionPerformed
+    }//GEN-LAST:event_btCrearPedidoActionPerformed
+
+    private void BotonGuardarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonGuardarPedidoActionPerformed
         // TODO add your handling code here:
+        String idPedido=idPedidoText.getText();
+        String idMesa=idMesaText.getText();
+        String idMesero=idMeseroText.getText();
+        String idTipo=idTipoText.getText();
+        String horaInicio=horaInicioText.getText();
+        String horaEntrega=horaEntregaText.getText();
         
-        ModelMain<Factura> modelo = new ModelMain();
-
-        if (CancelarGuardarFactura.getText().equalsIgnoreCase("Actualizar") && rbModificar.isSelected()) {
-            String factura_id = id_factura.getText();
-            int propina = Propina.getSelectedIndex();
-            String id_personal = IdPersonalFactura.getText();
-            int descuento = Integer.parseInt(descuento_factura.getText());
-            int impuesto = Integer.parseInt(Impuesto.getText());
-            String cliente_id = id_cliente.getText();
-            int total = Integer.parseInt(totalPago.getText());
+        ModelMain<Personal> personal = new ModelMain();
+        Personal mesero = new Personal();
+        mesero = personal.getByID(mesero.getClass(),idMesero);
             
-            Personal persona = new Personal();
-            persona = modelo.getByID(persona.getClass(), id_personal);
-            
-            java.util.Date fechaActual = new java.util.Date();
-            
-            Factura mi_factura = new Factura(factura_id,persona,fechaActual, propina, descuento, impuesto, cliente_id, total, null, null);
-            modelo.update(mi_factura);
-            JOptionPane.showMessageDialog(null, "Modificado con Exito");
-            FacturaCrearModificar(2);
-        }
-
-        if (CancelarGuardarFactura.getText().equalsIgnoreCase("Eliminar") && rbEliminar.isSelected()) {
-            String factura_id = id_factura.getText();
-            int propina = Propina.getSelectedIndex();
-            String id_personal = IdPersonalFactura.getText();
-            int descuento = Integer.parseInt(descuento_factura.getText());
-            int impuesto = Integer.parseInt(Impuesto.getText());
-            String cliente_id = id_cliente.getText();
-            int total = Integer.parseInt(totalPago.getText());
-            
-            
-            
-            Personal persona = new Personal();
-            persona = modelo.getByID(persona.getClass(), id_personal);
-            
-            java.util.Date fechaActual = new java.util.Date();
-            
-            Factura mi_factura = new Factura(factura_id,persona,fechaActual, propina, descuento, impuesto, cliente_id, total, null, null);
-            
-            modelo.delete(mi_factura);
-            JOptionPane.showMessageDialog(null, "Eliminado con Exito");
-            setCompPanelFactura();
-        }
+        ModelMain<ItemMenu> modelo = new ModelMain();
+        ModelMain<Pedido> modeloPedido = new ModelMain();
+        Categoria categoria = new Categoria();
+       
+        Date hInicio=null;
+        Date hEntrega=null;
         
         
-    }//GEN-LAST:event_CancelarGuardarFacturaActionPerformed
+        try{
+            SimpleDateFormat hi=new SimpleDateFormat("yyyy/mm/d",Locale.ENGLISH);
+            hInicio=hi.parse(horaInicio);
+            hEntrega=hi.parse(horaEntrega);
+        }catch(Exception e){}
+        
+        
+        Pedido objPedido = new Pedido(idPedido, mesero, idMesa, idTipo, hInicio, hEntrega,null);
+        modeloPedido.insertIdString(objPedido);   
+                
+        
+    }//GEN-LAST:event_BotonGuardarPedidoActionPerformed
 
-    private void GuardarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarFacturaActionPerformed
+    private void BotonConsultaPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonConsultaPedidoActionPerformed
         // TODO add your handling code here:
+        String idPedido=idPedidoText.getText();
+        Pedido objPedido=new Pedido();
         
-        ModelMain<Factura> modelo = new ModelMain();
-        if (GuardarFactura.getText().equalsIgnoreCase("Guardar")) {
-            
-            String factura_id = id_factura.getText();
-            int propina = Propina.getSelectedIndex();
-            String id_personal = IdPersonalFactura.getText();
-            int descuento = Integer.parseInt(descuento_factura.getText());
-            int impuesto = Integer.parseInt(Impuesto.getText());
-            String cliente_id = id_cliente.getText();
-            int total = Integer.parseInt(totalPago.getText());
-            
-            Personal persona = new Personal();
-            persona = modelo.getByID(persona.getClass(), id_personal);
-            
-            java.util.Date fechaActual = new java.util.Date();
-            
-            Factura mi_factura = new Factura(factura_id,persona,fechaActual, propina, descuento, impuesto, cliente_id, total, null, null);
-            modelo.insertIdString(mi_factura);
-            
-            JOptionPane.showMessageDialog(null, "Guardado con Exito");
-        }
+        ModelMain<Pedido> modeloPedido = new ModelMain();
         
-        if (GuardarFactura.getText().equalsIgnoreCase("Buscar") && rbConsultar.isSelected()) {
-            String factura_id = id_factura.getText();
-            Factura mi_factura = new Factura();
-            mi_factura = modelo.getByID(mi_factura.getClass(), factura_id);
-            if (mi_factura != null) {
-                Propina.setSelectedIndex(mi_factura.getPropina());
-                IdPersonalFactura.setText(mi_factura.getPersonal().getIdPersonal());
-                descuento_factura.setText(Integer.toString(mi_factura.getDescuento()));
-                Impuesto.setText(Integer.toString(mi_factura.getImpuesto()));
-                id_cliente.setText(mi_factura.getCedulaCliente());
-                totalPago.setText(Integer.toString(mi_factura.getTotalPago()));
-            } else {
-                JOptionPane.showMessageDialog(null, "No se encuentra la factura");
-                FacturaCrearModificar(1);
+        objPedido = modeloPedido.getByID(objPedido.getClass(), idPedido);
+            if(objPedido != null){
+                idMesaText.setText(objPedido.getIdMesa());
+                idMeseroText.setText(objPedido.getPersonal().getIdPersonal());
+                idTipoText.setText(objPedido.getIdTipo());
+                horaInicioText.setText(objPedido.getHoraInicio().toString());
+                horaEntregaText.setText(objPedido.getHoraEntrega().toString());
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "No se encuentra el pedido ");
             }
-        }
-
-        if ((GuardarFactura.getText().equalsIgnoreCase("Buscar") || GuardarFactura.getText().equalsIgnoreCase("Actualizar")) && rbModificar.isSelected()) {
-            String factura_id = id_factura.getText();
-            Factura mi_factura = new Factura();
-            mi_factura = modelo.getByID(mi_factura.getClass(), factura_id);
-            
-            if (mi_factura != null) {
-                Propina.setSelectedIndex(mi_factura.getPropina());
-                IdPersonalFactura.setText(mi_factura.getPersonal().getIdPersonal());
-                descuento_factura.setText(Integer.toString(mi_factura.getDescuento()));
-                Impuesto.setText(Integer.toString(mi_factura.getImpuesto()));
-                id_cliente.setText(mi_factura.getCedulaCliente());
-                totalPago.setText(Integer.toString(mi_factura.getTotalPago()));
-                CancelarGuardarFactura.setEnabled(true);
-            } else {
-                JOptionPane.showMessageDialog(null, "No se encuentra la factura");
-                FacturaCrearModificar(1);
-            }
-        }
-
-        if (GuardarFactura.getText().equalsIgnoreCase("Buscar") && rbEliminar.isSelected()) {
-            String factura_id = id_factura.getText();
-            Factura mi_factura = new Factura();
-            mi_factura = modelo.getByID(mi_factura.getClass(), factura_id);
-            if (mi_factura != null) {
-                Propina.setSelectedIndex(mi_factura.getPropina());
-                IdPersonalFactura.setText(mi_factura.getPersonal().getIdPersonal());
-                descuento_factura.setText(Integer.toString(mi_factura.getDescuento()));
-                Impuesto.setText(Integer.toString(mi_factura.getImpuesto()));
-                id_cliente.setText(mi_factura.getCedulaCliente());
-                totalPago.setText(Integer.toString(mi_factura.getTotalPago()));
-                CancelarGuardarFactura.setEnabled(true);
-            } else {
-                JOptionPane.showMessageDialog(null, "No se encuentra la factura");
-                FacturaCrearModificar(1);
-            }
-        }
         
-    }//GEN-LAST:event_GuardarFacturaActionPerformed
+        
+        
+    }//GEN-LAST:event_BotonConsultaPedidoActionPerformed
 
-    private void descuento_facturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_descuento_facturaActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_descuento_facturaActionPerformed
-
-    private void totalPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalPagoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_totalPagoActionPerformed
+        String idPedido=idPedidoText.getText();
+        
+        ModelMain<Pedido> modeloPedido = new ModelMain();
+        Pedido objPedido=new Pedido();
+        objPedido = modeloPedido.getByID(objPedido.getClass(), idPedido);
+         modeloPedido.delete(objPedido);
+        
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1537,18 +1368,14 @@ public class Gui extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Boton1;
     private javax.swing.JButton Boton2;
-    private javax.swing.JButton CancelarGuardarFactura;
+    private javax.swing.JButton BotonConsultaPedido;
+    private javax.swing.JButton BotonGuardarPedido;
     private javax.swing.JTextField CantidadText;
     private javax.swing.JComboBox<String> ComboCategoria;
     private javax.swing.JTextField DescripcionText;
-    private javax.swing.JButton GuardarFactura;
     private javax.swing.JTextField IdItemText;
-    private javax.swing.JTextField IdPersonalFactura;
     private javax.swing.JTextField ImagenText;
-    private javax.swing.JTextField Impuesto;
-    private javax.swing.JLabel Impuestos;
     private javax.swing.JTextField PrecioText;
-    private javax.swing.JComboBox<String> Propina;
     private javax.swing.JButton bCancelarCrearModUsuario;
     private javax.swing.JButton bGuardarCrearModUsuario;
     private javax.swing.JButton btCrearFactura;
@@ -1559,16 +1386,21 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbCargoCrearModUsuario;
     private javax.swing.JComboBox<String> cbHorarioCrearModUsuario;
     private javax.swing.JComboBox<String> cbTipoId;
-    private javax.swing.JTextField descuento_factura;
-    private javax.swing.JTextField id_cliente;
-    private javax.swing.JTextField id_factura;
+    private javax.swing.JTextField horaEntregaText;
+    private javax.swing.JTextField horaInicioText;
+    private javax.swing.JTextField idMesaText;
+    private javax.swing.JTextField idMeseroText;
+    private javax.swing.JTextField idPedidoText;
+    private javax.swing.JTextField idTipoText;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
@@ -1611,6 +1443,5 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JTextField tfNombreCrearModUsuario;
     private javax.swing.JTextField tfPasswordCrearModUsuario;
     private javax.swing.JTextField tfTelefonoCrearModUsuario;
-    private javax.swing.JTextField totalPago;
     // End of variables declaration//GEN-END:variables
 }
