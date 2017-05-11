@@ -1,0 +1,12 @@
+entity/PedidoItemId_.java
+entity/Pedido_.java
+entity/Categoria_.java
+entity/FacturaFormaPago_.java
+entity/Personal_.java
+entity/FacturaFormaPagoId_.java
+entity/FacturaItems_.java
+entity/FacturaItemsId_.java
+entity/Factura_.java
+entity/PedidoItem_.java
+entity/FormaPago_.java
+entity/ItemMenu_.java
